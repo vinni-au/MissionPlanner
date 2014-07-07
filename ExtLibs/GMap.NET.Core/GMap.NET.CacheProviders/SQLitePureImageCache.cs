@@ -13,8 +13,8 @@ namespace GMap.NET.CacheProviders
    using GMap.NET.MapProviders;
    using System.Threading;
 
-#if !MONO
-   using System.Data.SQLite;
+#if true
+    using System.Data.SQLite;
 #else
    using SQLiteConnection = Mono.Data.SqliteClient.SqliteConnection;
    using SQLiteTransaction = Mono.Data.SqliteClient.SqliteTransaction;
@@ -590,7 +590,7 @@ namespace GMap.NET.CacheProviders
                                  {
                                     using(SQLiteCommand cmd = new SQLiteCommand(string.Format("INSERT INTO Tiles(X, Y, Zoom, Type, CacheTime) SELECT X, Y, Zoom, Type, CacheTime FROM Source.Tiles WHERE id={0}; INSERT INTO TilesData(id, Tile) Values((SELECT last_insert_rowid()), (SELECT Tile FROM Source.TilesData WHERE id={0}));", id), cn2))
                                     {
-                                       cmd.Transaction = tr;
+                                       cmd.Transaction = (SQLiteTransaction)tr;
                                        cmd.ExecuteNonQuery();
                                     }
                                  }
